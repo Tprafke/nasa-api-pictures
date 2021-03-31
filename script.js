@@ -10,9 +10,12 @@ const apiKey = 'DEMO_KEY';
 const apiURL = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&count=${count}`;
 
 let resultsArray = [];
+let favorites = {};
 
-function updateDOM() {
-    resultsArray.forEach((result) => {
+function createDOMNodes(page) {
+    const currentArray = page ==='results' ? resultsArray : Object.values(favorites);
+    console.log('Current Array', page, currentArray);
+    currentArray.forEach((result) => {
         // Card Container
         const card = document.createElement('div');
         card.classList.add('card');
@@ -38,6 +41,7 @@ function updateDOM() {
         const saveText = document.createElement('p');
         saveText.classList.add('clickable');
         saveText.textContent = 'Add to Favorites';
+        saveText.setAttribute('onclick', `saveFavorite('${result.url}')`);
         // Card Text
         const cardText = document.createElement('p');
         cardText.textContent = result.explanation;
@@ -60,16 +64,42 @@ function updateDOM() {
     });
 }
 
+function updateDOM(page) {
+    // Get Favorites from localStorage
+    if (localStorage.getItem('nasaFavorites')) {
+        favorites = JSON.parse(localStorage.getItem('nasaFavorites'));
+        console.log('Favorites from localStorage', favorites);
+    }
+    createDOMNodes(page);
+}
+
 // Get 10 Images from NASA API
 async function getNasaPictures() {
     try {
         const response = await fetch(apiURL);
         resultsArray = await response.json();
-        updateDOM();
+        updateDOM('favorites');
     } catch (error) {
         // Catch error here
         console.log(error);
     }
+}
+
+// Add result to favorites
+function saveFavorite(itemUrl) {
+    // Loop through result array to select favorite
+    resultsArray.forEach((item) => {
+        if (item.url.includes(itemUrl) && !favorites[itemUrl]) {
+            favorites[itemUrl] = item;
+            // Show save confirmation for 2 seconds
+            saveConfirmed.hidden = false;
+            setTimeout(() => {
+                saveConfirmed.hidden = true;
+            }, 2000);
+            // Set Favorites in local storage
+            localStorage.setItem('nasaFavorites', JSON.stringify(favorites));
+        }
+    });
 }
 
 // On Load
