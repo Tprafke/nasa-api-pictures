@@ -1,6 +1,6 @@
-# Nasa API Pictures
+# NASA API Pictures
 
-View Nasa API Pictures here:
+View NASA API Pictures here:
 https://tprafke.github.io/nasa-api-pictures/
 
 ## Description
