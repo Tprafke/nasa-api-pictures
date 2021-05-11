@@ -4,7 +4,7 @@
 
 ## Description
 
-A simple app allowing users to view a selection of pictures from NASA's API. Users can also save their favorite pictures in local storage.
+A simple app built using JavaScript, HTML, and CSS. Allows users to view a selection of pictures from NASA's API. Users can also save their favorite pictures in the browser's local storage.
 
 ## Languages & Technologies
 
